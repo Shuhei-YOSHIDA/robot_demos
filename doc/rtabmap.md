@@ -12,3 +12,4 @@ sudo apt-get install ros-(distro)-freenect-stack
 ```
 
 Some packages may be unnecessary...
+Perhaps, you need apt-get update & upgrade. 

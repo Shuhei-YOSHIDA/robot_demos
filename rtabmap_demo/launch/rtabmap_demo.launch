@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find freenect_launch)/launch/freenect.launch" >
+    <arg name="depth_registration" value="true" />
+  </include>
+  <include file="$(find rtabmap_ros)/launch/rtabmap.launch" />
+</launch>
