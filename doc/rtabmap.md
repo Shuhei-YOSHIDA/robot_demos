@@ -13,3 +13,5 @@ sudo apt-get install ros-(distro)-freenect-stack
 
 Some packages may be unnecessary...
 Perhaps, you need apt-get update & upgrade. 
+
+And if you can prepare calibration file, Set the file name to launch. 

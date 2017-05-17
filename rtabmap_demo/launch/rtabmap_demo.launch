@@ -1,6 +1,9 @@
 <launch>
   <include file="$(find freenect_launch)/launch/freenect.launch" >
     <arg name="depth_registration" value="true" />
+    <!-- Change these URL for your kinect -->
+    <arg name="rgb_camera_info_url" value="file://${ROS_HOME}/camera_info/rgb_A00362906044044A" />
+    <arg name="depth_camera_info_url" value="file://${ROS_HOME}/camera_info/depth_A00362906044044A.yaml" />
   </include>
   <include file="$(find rtabmap_ros)/launch/rtabmap.launch" />
 </launch>
