@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find gazebo_demos)/urdf/body/body.gazebo.xacro"/>
+  <xacro:include filename="$(find gazebo_demos)/urdf/body/body.transmission.xacro"/>
+  <xacro:include filename="$(find gazebo_demos)/urdf/common.xacro"/>
+
+  <!-- Geometry property for box -->
+  <!-- body size -->
+  <property name="b_x" value="0.100"/>
+  <property name="b_y" value="0.100"/>
+  <property name="b_z" value="0.100"/>
+  <!-- body mass -->
+  <property name="b_m" value="0.300"/>
+  <!-- inertia tensol -->
+  <property name="b_ixx" value="${(1/12)*b_m*(b_y*b_y+b_z*b_z)}"/>
+  <property name="b_iyy" value="${(1/12)*b_m*(b_x*b_x+b_z*b_z)}"/>
+  <property name="b_izz" value="${(1/12)*b_m*(b_x*b_x+b_y*b_y)}"/>
+  <property name="b_ixy" value="0"/>
+  <property name="b_ixz" value="0"/>
+  <property name="b_iyz" value="0"/>
+
+  <!-- ============= Body Description ============= -->
+  <!-- baselinkToBody is better? -->
+  <xacro:macro name="WorldToBody" params="name_">
+      <joint name="jointwb" type="floating">
+        <parent link="world"/>
+        <child link="${name_}"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </joint> 
+    <!-- central body -->
+    <link name="${name_}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${b_m}"/>
+        <inertia ixx="+${b_ixx}" ixy="-${b_ixy}" ixz="-${b_ixz}" 
+                                 iyy="+${b_iyy}" iyz="-${b_iyz}" 
+                                                 izz="+${b_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${b_x} ${b_y} ${b_z}"/>
+        </geometry>
+        <material name="Yellow"/>
+      </visual> 
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${b_x} ${b_y} ${b_z}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <xacro:WorldToBody_gazebo name="${name_}" />
+    <xacro:WorldToBody_transmission name="${name_}" />
+  </xacro:macro>
+</robot>

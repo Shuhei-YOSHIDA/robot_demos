@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+	<property name="M_PI" value="3.1415926535897931" />
+	<property name="VELOCITY_LIMIT_SCALE" value="0.6" />
+
+	<!-- motor information -->
+	<property name="dx_lo" value="-${150*M_PI/180}" />
+	<property name="dx_up" value="+${150*M_PI/180}" />
+	<property name="dx_eff" value="3.621866" />
+	<property name="dx_vel" value="7.016224" />
+
+	<!-- Mathmatic -->
+	<property name="Sin45" value="0.707106781"/>
+	<property name="Cos45" value="0.707106781"/>
+
+	<xacro:macro name="common">
+<!--
+		<link name="world"/>
+-->
+	</xacro:macro>
+</robot>

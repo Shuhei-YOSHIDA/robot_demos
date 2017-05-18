@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<!-- XML namespaces -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find gazebo_demo)/urdf/limb/limb.gazebo.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/limb/limb.transmission_position.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/common.xacro"/>
+
+  <!-- length and radius property of cylinder link of a limb -->
+  <!-- link1 -->
+  <property name="l1_length" value="0.094" />
+  <property name="l1_radius" value="0.015" />
+  <property name="l1_mass"   value="0.2"/>
+  <property name="l1_ixx"    value="${(1/4)*l1_mass*l1_radius*l1_radius+(1/12)*l1_mass*l1_length*l1_length}"/>
+  <property name="l1_iyy"    value="${(1/4)*l1_mass*l1_radius*l1_radius+(1/12)*l1_mass*l1_length*l1_length}"/>
+  <property name="l1_izz"    value="${(1/2)*l1_mass*l1_radius*l1_radius}"/>
+  <property name="l1_ixy"    value="0" />
+  <property name="l1_ixz"    value="0" />
+  <property name="l1_iyz"    value="0" />
+  <!-- link2 -->
+  <property name="l2_length" value="0.095" />
+  <property name="l2_radius" value="0.015" />
+  <property name="l2_mass"   value="0.2"/>
+  <property name="l2_ixx"    value="${(1/4)*l2_mass*l2_radius*l2_radius+(1/12)*l2_mass*l2_length*l2_length}"/>
+  <property name="l2_iyy"    value="${(1/4)*l2_mass*l2_radius*l2_radius+(1/12)*l2_mass*l2_length*l2_length}"/>
+  <property name="l2_izz"    value="${(1/2)*l2_mass*l2_radius*l2_radius}"/>
+  <property name="l2_ixy"    value="0" />
+  <property name="l2_ixz"    value="0" />
+  <property name="l2_iyz"    value="0" />
+  <!-- link3 -->
+  <property name="l3_length" value="0.099" />
+  <property name="l3_radius" value="0.015" />
+  <property name="l3_mass"   value="0.2"/>
+  <property name="l3_ixx"    value="${(1/4)*l3_mass*l3_radius*l3_radius+(1/12)*l3_mass*l3_length*l3_length}"/>
+  <property name="l3_iyy"    value="${(1/4)*l3_mass*l3_radius*l3_radius+(1/12)*l3_mass*l3_length*l3_length}"/>
+  <property name="l3_izz"    value="${(1/2)*l3_mass*l3_radius*l3_radius}"/>
+  <property name="l3_ixy"    value="0" />
+  <property name="l3_ixz"    value="0" />
+  <property name="l3_iyz"    value="0" />
+  <!-- link4 -->
+  <property name="l4_length" value="0.140" />
+  <property name="l4_radius" value="0.015" />
+  <property name="l4_mass"   value="0.2"/>
+  <property name="l4_ixx"    value="${(1/4)*l4_mass*l4_radius*l4_radius+(1/12)*l4_mass*l4_length*l4_length}"/>
+  <property name="l4_iyy"    value="${(1/4)*l4_mass*l4_radius*l4_radius+(1/12)*l4_mass*l4_length*l4_length}"/>
+  <property name="l4_izz"    value="${(1/2)*l4_mass*l4_radius*l4_radius}"/>
+  <property name="l4_ixy"    value="0" />
+  <property name="l4_ixz"    value="0" />
+  <property name="l4_iyz"    value="0" />
+
+
+  <!-- ============= Limb Description ============= -->
+  <xacro:macro name="link_limb4" params="limbNo parent px py pz prow ppit pyaw">
+    <joint name="joint${limbNo}_01" type="revolute">
+      <parent link="${parent}"/>
+      <child link="link${limbNo}_1"/>
+      <origin xyz="${px} ${py} ${pz}" rpy="${prow} ${ppit} ${pyaw}"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${dx_lo}" upper="${dx_up}" effort="${dx_eff}" velocity="${dx_vel}"/>
+    </joint>
+    <link name="link${limbNo}_1">
+      <inertial>
+        <origin xyz="0 0 ${l1_length/2}" rpy="0 0 0"/>
+        <mass value="${l1_mass}"/>
+        <inertia ixx="${l1_ixx}" ixy="-${l1_ixy}" ixz="-${l1_ixz}" 
+                        iyy="${l1_iyy}"  iyz="-${l1_iyz}" 
+                                    izz="${l1_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 ${l1_length/2}" rpy="0 0 0"/>      
+        <geometry>
+          <cylinder radius="${l1_radius}" length="${l1_length}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${l1_length/2}" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${l1_radius}" length="${l1_length}"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint${limbNo}_12" type="revolute">
+      <parent link="link${limbNo}_1"/>
+      <child link="link${limbNo}_2"/>
+      <origin xyz="0 0 ${l1_length}" rpy="0 -${M_PI/2} +${M_PI/2}"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${dx_lo}" upper="${dx_up}" effort="${dx_eff}" velocity="${dx_vel}"/>
+    </joint>
+    <link name="link${limbNo}_2">
+      <inertial>
+        <origin xyz="${l2_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>
+        <mass value="${l2_mass}"/>
+        <inertia ixx="${l2_ixx}" ixy="-${l2_ixy}" ixz="-${l2_ixz}" 
+                       iyy="${l2_iyy}"  iyz="-${l2_iyz}" 
+                                  izz="${l2_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="${l2_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>      
+        <geometry>
+          <cylinder radius="${l2_radius}" length="${l2_length}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual>
+      <collision>
+        <origin xyz="${l2_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>
+        <geometry>
+          <cylinder radius="${l2_radius}" length="${l2_length}"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint${limbNo}_23" type="revolute">
+      <parent link="link${limbNo}_2"/>
+      <child link="link${limbNo}_3"/>
+      <origin xyz="${l2_length} 0 0" rpy="+${M_PI/2} 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${dx_lo}" upper="${dx_up}" effort="${dx_eff}" velocity="${dx_vel}"/>
+    </joint>
+    <link name="link${limbNo}_3">
+      <inertial>
+        <origin xyz="${l3_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>
+        <mass value="${l3_mass}"/>
+        <inertia ixx="${l3_ixx}" ixy="-${l3_ixy}" ixz="-${l3_ixz}" 
+                     iyy="${l3_iyy}"  iyz="-${l3_iyz}" 
+                               izz="${l3_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="${l3_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>      
+        <geometry>
+          <cylinder radius="${l3_radius}" length="${l3_length}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual>
+      <collision>
+        <origin xyz="${l3_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>
+        <geometry>
+          <cylinder radius="${l3_radius}" length="${l3_length}"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="joint${limbNo}_34" type="revolute">
+      <parent link="link${limbNo}_3"/>
+      <child link="link${limbNo}_4"/>
+      <origin xyz="${l3_length} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="${dx_lo}" upper="${dx_up}" effort="${dx_eff}" velocity="${dx_vel}"/>
+    </joint>
+    <link name="link${limbNo}_4">
+      <inertial>
+        <origin xyz="${l4_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>
+        <mass value="${l4_mass}"/>
+        <inertia ixx="${l4_ixx}" ixy="-${l4_ixy}" ixz="-${l4_ixz}" 
+                     iyy="${l4_iyy}"  iyz="-${l4_iyz}" 
+                               izz="${l4_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="${l4_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>      
+        <geometry>
+          <cylinder radius="${l4_radius}" length="${l4_length}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual>
+      <collision>
+        <origin xyz="${l4_length/2} 0 0" rpy="0 +${M_PI/2} 0"/>
+        <geometry>
+          <cylinder radius="${l4_radius}" length="${l4_length}"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <xacro:limb4_gazebo limbNo_g="${limbNo}" />
+    <xacro:limb4_transmission limbNo_t="${limbNo}" />
+  </xacro:macro> 
+</robot> 

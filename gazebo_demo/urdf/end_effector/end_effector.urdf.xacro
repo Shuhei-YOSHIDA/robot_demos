@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<!-- XML namespaces -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find gazebo_demo)/urdf/end_effector/end_effector.gazebo.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/end_effector/end_effector.transmission.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/common.xacro"/>
+
+  <!-- length and radius property of cylinder link of a limb -->
+  <!-- EE_base -->
+  <property name="Eb_x"   value="0.010" />
+  <property name="Eb_y"   value="0.030" />
+  <property name="Eb_z"   value="${0.030+0.002}" /> <!-- 1mm margin -->
+  <property name="Eb_m"   value="0.050"/>
+  <property name="Eb_ixx" value="${(1/12)*Eb_m*(Eb_y*Eb_y+Eb_z*Eb_z)}"/>
+  <property name="Eb_iyy" value="${(1/12)*Eb_m*(Eb_x*Eb_x+Eb_z*Eb_z)}"/>
+  <property name="Eb_izz" value="${(1/12)*Eb_m*(Eb_x*Eb_x+Eb_y*Eb_y)}"/>
+  <property name="Eb_ixy" value="0" />
+  <property name="Eb_ixz" value="0" />
+  <property name="Eb_iyz" value="0" />
+
+  <!-- EE_up -->
+  <property name="Eu_x"   value="0.050" />
+  <property name="Eu_y"   value="0.030" />
+  <property name="Eu_z"   value="0.010" />
+  <property name="Eu_m"   value="0.050"/>
+  <property name="Eu_ixx" value="${(1/12)*Eu_m*(Eu_y*Eu_y+Eu_z*Eu_z)}"/>
+  <property name="Eu_iyy" value="${(1/12)*Eu_m*(Eu_x*Eu_x+Eu_z*Eu_z)}"/>
+  <property name="Eu_izz" value="${(1/12)*Eu_m*(Eu_x*Eu_x+Eu_y*Eu_y)}"/>
+  <property name="Eu_ixy" value="0" />
+  <property name="Eu_ixz" value="0" />
+  <property name="Eu_iyz" value="0" />
+  <property name="Eu_up"  value="+${10*M_PI/180}"/>
+  <property name="Eu_lo"  value="-${M_PI/2 + 5 *M_PI/180}"/>
+
+  <!-- EE_down -->
+  <property name="Ed_x"   value="0.025" />
+  <property name="Ed_y"   value="0.030" />
+  <property name="Ed_z"   value="0.010" />
+  <property name="Ed_m"   value="0.050"/>
+  <property name="Ed_ixx" value="${(1/12)*Ed_m*(Ed_y*Ed_y+Ed_z*Ed_z)}"/>
+  <property name="Ed_iyy" value="${(1/12)*Ed_m*(Ed_x*Ed_x+Ed_z*Ed_z)}"/>
+  <property name="Ed_izz" value="${(1/12)*Ed_m*(Ed_x*Ed_x+Ed_y*Ed_y)}"/>
+  <property name="Ed_ixy" value="0" />
+  <property name="Ed_ixz" value="0" />
+  <property name="Ed_iyz" value="0" />
+  <property name="Ed_up"  value="+${M_PI/2}"/>
+  <property name="Ed_lo"  value="-${10*M_PI/180}"/>
+
+  <!-- EE_nail -->
+  <property name="En_x"   value="0.010" />
+  <property name="En_y"   value="0.030" />
+  <property name="En_z"   value="0.010" />
+  <property name="En_m"   value="0.020" />
+  <property name="En_ixx" value="${(1/12)*En_m*(En_y*En_y+En_z*En_z)}"/>
+  <property name="En_iyy" value="${(1/12)*En_m*(En_x*En_x+En_z*En_z)}"/>
+  <property name="En_izz" value="${(1/12)*En_m*(En_x*En_x+En_y*En_y)}"/>
+  <property name="En_ixy" value="0" />
+  <property name="En_ixz" value="0" />
+  <property name="En_iyz" value="0" />
+
+
+  <!-- ============ EE Description ============ -->
+  <xacro:macro name="EE_gripper" params="limbNo parent px py pz prow ppit pyaw">
+    <!-- EE_base -->
+    <joint name="joint${limbNo}_lb" type="fixed">
+      <parent link="${parent}"/>
+      <child link="EEbase_${limbNo}"/>
+      <!-- <origin xyz="${px} ${py} ${pz}" rpy="${prow} ${ppit} ${pyaw}"/> -->
+      <origin xyz="${px} ${py} ${pz}" rpy="-${M_PI/2} 0 0"/>
+    </joint>
+    <link name="EEbase_${limbNo}">
+      <inertial>
+        <origin xyz="${Eb_x/2} 0 0" rpy="0 0 0"/>
+        <mass value="${Eb_m}"/>
+        <inertia ixx="+${Eb_ixx}" ixy="-${Eb_ixy}" ixz="-${Eb_ixz}" 
+                                  iyy="+${Eb_iyy}" iyz="-${Eb_iyz}" 
+                                                   izz="+${Eb_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="${Eb_x/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${Eb_x} ${Eb_y} ${Eb_z}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual> 
+      <collision>
+        <origin xyz="${Eb_x/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${Eb_x} ${Eb_y} ${Eb_z}"/>
+        </geometry>
+      </collision>
+    </link>
+    <!-- EE_up -->
+    <joint name="joint${limbNo}_bu" type="revolute">
+      <parent link="EEbase_${limbNo}"/>
+      <child link="EEup_${limbNo}"/>
+      <origin xyz="+${Eb_x/2} 0  +${Eb_z/2}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="${Eu_lo}" upper="${Eu_up}" effort="${10*dx_eff}" velocity="${dx_vel}"/>
+    </joint>
+    <link name="EEup_${limbNo}">
+      <inertial>
+        <origin xyz="${Eu_x/2} 0 0" rpy="0 0 0"/>
+        <mass value="${Eu_m}"/>
+        <inertia ixx="+${Eu_ixx}" ixy="-${Eu_ixy}" ixz="-${Eu_ixz}" 
+                                  iyy="+${Eu_iyy}" iyz="-${Eu_iyz}" 
+                                                   izz="+${Eu_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="${Eu_x/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${Eu_x} ${Eu_y} ${Eu_z}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual> 
+      <collision>
+        <origin xyz="${Eu_x/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${Eu_x} ${Eu_y} ${Eu_z}"/>
+        </geometry>
+      </collision>
+    </link>
+    <!-- EE_down -->
+    <joint name="joint${limbNo}_bd" type="revolute">
+      <parent link="EEbase_${limbNo}"/>
+      <child link="EEdown_${limbNo}"/>
+      <origin xyz="+${Eb_x/2} 0  -${Eb_z/2}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="${Ed_lo}" upper="${Ed_up}" effort="${10*dx_eff}" velocity="${dx_vel}"/>
+    </joint>
+    <link name="EEdown_${limbNo}">
+      <inertial>
+        <origin xyz="${Ed_x/2} 0 0" rpy="0 0 0"/>
+        <mass value="${Ed_m}"/>
+        <inertia ixx="+${Ed_ixx}" ixy="-${Ed_ixy}" ixz="-${Ed_ixz}" 
+                                  iyy="+${Ed_iyy}" iyz="-${Ed_iyz}" 
+                                                   izz="+${Ed_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="${Ed_x/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${Ed_x} ${Ed_y} ${Ed_z}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual> 
+      <collision>
+        <origin xyz="${Ed_x/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${Ed_x} ${Ed_y} ${Ed_z}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <xacro:EE_gazebo limbNo_g="${limbNo}" />
+    <xacro:EE_transmission limbNo_t="${limbNo}" />
+
+    <!-- EEupNail -->
+    <joint name="joint${limbNo}_un" type="fixed">
+      <parent link="EEup_${limbNo}"/>
+      <child link="EEuNail_${limbNo}"/>
+      <origin xyz="+${Eu_x} 0  -${Eu_z/2}" rpy="0 0 0"/>
+    </joint>
+    <link name="EEuNail_${limbNo}">
+      <inertial>
+        <origin xyz="-${En_x/2} 0 -${En_z/2}" rpy="0 0 0"/>
+        <mass value="${En_m}"/>
+        <inertia ixx="+${En_ixx}" ixy="-${En_ixy}" ixz="-${En_ixz}" 
+                                  iyy="+${En_iyy}" iyz="-${En_iyz}" 
+                                                   izz="+${En_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="-${En_x/2} 0 -${En_z/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${En_x} ${En_y} ${En_z}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual> 
+      <collision>
+        <origin xyz="-${En_x/2} 0 -${En_z/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${En_x} ${En_y} ${En_z}"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- EEdownNail -->
+    <joint name="joint${limbNo}_dn" type="fixed">
+      <parent link="EEdown_${limbNo}"/>
+      <child link="EEdNail_${limbNo}"/>
+      <origin xyz="+${Ed_x} 0  0" rpy="0 +${M_PI/4} 0"/>
+    </joint>
+    <link name="EEdNail_${limbNo}">
+      <inertial>
+        <origin xyz="0 0 +${En_z/2}" rpy="0 0 0"/>
+        <mass value="${En_m}"/>
+        <inertia ixx="+${En_ixx}" ixy="-${En_ixy}" ixz="-${En_ixz}" 
+                                  iyy="+${En_iyy}" iyz="-${En_iyz}" 
+                                                   izz="+${En_izz}"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 +${En_z/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${En_x} ${En_y} ${En_z}"/>
+        </geometry>
+        <material name="Cyan"/>
+      </visual> 
+      <collision>
+        <origin xyz="0 0 +${En_z/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${En_x} ${En_y} ${En_z}"/>
+        </geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+</robot>

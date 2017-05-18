@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="limb4_gazebo" params="limbNo_g">
+    <gazebo reference="link${limbNo_g}_1">
+      <selfCollide>true</selfCollide>
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+    </gazebo>
+    <gazebo reference="link${limbNo_g}_2">
+      <selfCollide>true</selfCollide>
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+    </gazebo>
+    <gazebo reference="link${limbNo_g}_3">
+      <selfCollide>true</selfCollide>
+        <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+    </gazebo>
+    <gazebo reference="link${limbNo_g}_4">
+      <selfCollide>true</selfCollide>
+      <mu1>0.5</mu1>
+      <mu2>0.5</mu2>
+    </gazebo>
+    <gazebo reference="joint${limbNo_g}_01">
+      <erp>0.1</erp>
+      <stopKd value="1000000000.0" />
+      <stopKp value="1000000000.0" />
+      <fudgeFactor value="0.5" />
+      <cfmDamping>true</cfmDamping>
+      <axis>
+        <dynamics damping="0.7" friction="0"/>
+      </axis>
+    </gazebo>
+    <gazebo reference="joint${limbNo_g}_12">
+      <erp>0.1</erp>
+      <stopKd value="1000000000.0" />
+      <stopKp value="1000000000.0" />
+      <fudgeFactor value="0.5" />
+      <cfmDamping>true</cfmDamping>
+      <axis>
+        <dynamics damping="0.7" friction="0"/>
+      </axis>
+    </gazebo>
+    <gazebo reference="joint${limbNo_g}_23">
+      <erp>0.1</erp>
+      <stopKd value="1000000000.0" />
+      <stopKp value="1000000000.0" />
+      <fudgeFactor value="0.5" />
+      <cfmDamping>true</cfmDamping>
+      <axis>
+        <dynamics damping="0.7" friction="0"/>
+      </axis>
+    </gazebo>
+    <gazebo reference="joint${limbNo_g}_34">
+      <erp>0.1</erp>
+      <stopKd value="1000000000.0" />
+      <stopKp value="1000000000.0" />
+      <fudgeFactor value="0.5" />
+      <cfmDamping>true</cfmDamping>
+      <axis>
+        <dynamics damping="0.7" friction="0"/>
+      </axis>
+    </gazebo>
+  </xacro:macro>
+</robot>

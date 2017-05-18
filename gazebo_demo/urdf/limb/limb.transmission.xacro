@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="limb4_transmission" params="limbNo_t">
+    <transmission name="tran${limbNo_t}_01">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint${limbNo_t}_01">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor${limbNo_t}_01">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name="tran${limbNo_t}_12">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint${limbNo_t}_12">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor${limbNo_t}_12">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name="tran${limbNo_t}_23">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint${limbNo_t}_23">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor${limbNo_t}_23">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <transmission name="tran${limbNo_t}_34">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint${limbNo_t}_34">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor${limbNo_t}_34">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+</robot>

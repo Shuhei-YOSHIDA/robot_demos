@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="EE_gazebo" params="limbNo_g">
+    <gazebo reference="EEbase_${limbNo_g}">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="EEup_${limbNo_g}">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="EEup_${limbNo_g}">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="joint${limbNo_g}_lb">
+      <!--  -->
+    </gazebo>
+    <gazebo reference="joint${limbNo_g}_bu">
+      <erp>0.1</erp>
+      <stopKd value="1000000000.0" />
+      <stopKp value="1000000000.0" />
+      <fudgeFactor value="0.5" />
+      <cfmDamping>true</cfmDamping>
+      <axis>
+        <dynamics damping="0.7" friction="0"/>
+      </axis>
+    </gazebo>
+    <gazebo reference="joint${limbNo_g}_bd">
+      <erp>0.1</erp>
+      <stopKd value="1000000000.0" />
+      <stopKp value="1000000000.0" />
+      <fudgeFactor value="0.5" />
+      <cfmDamping>true</cfmDamping>
+      <axis>
+        <dynamics damping="0.7" friction="0"/>
+      </axis>
+    </gazebo>
+  </xacro:macro>
+</robot>

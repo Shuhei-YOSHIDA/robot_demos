@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="limbsys" >
+  <!-- The following included files set up definitions of parts of the robot body -->
+  <!-- misc common stuff? -->
+  <xacro:include filename="$(find gazebo_demos)/urdf/common.xacro" />
+  <!-- material definition -->
+  <xacro:include filename="$(find gazebo_demos)/urdf/material.urdf.xacro" />
+  <!-- gazebo definition -->
+  <xacro:include filename="$(find gazebo_demos)/gazebo/gazebo.urdf.xacro" />
+  <!-- body definition -->
+  <xacro:include filename="$(find gazebo_demos)/urdf/body/body.urdf.xacro" />
+  <!-- limb definition -->
+  <xacro:include filename="$(find gazebo_demos)/urdf/limb/limb.urdf.xacro" />
+  <!-- end effector definition -->
+  <xacro:include filename="$(find gazebo_demos)/urdf/end_effector/end_effector.urdf.xacro" />
+
+  <!-- Now we can start using the macros included above to define our robot -->
+  <xacro:common/>
+  <!-- body and 8 limbs -->
+  <xacro:WorldToBody name_="body"/>
+  <property name="lx" value="0.050"/>
+  <property name="ly" value="0.050"/>
+  <property name="lz" value="0.050"/>
+  <xacro:link_limb4 limbNo="1" parent="body" px="+${lx}" py="+${ly}" pz="+${lz}" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:link_limb4 limbNo="2" parent="body" px="+${lx}" py="-${ly}" pz="+${lz}" prow="-${M_PI/2}" ppit="0" pyaw="-${M_PI}"/>
+  <xacro:link_limb4 limbNo="3" parent="body" px="+${lx}" py="+${ly}" pz="-${lz}" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:link_limb4 limbNo="4" parent="body" px="+${lx}" py="-${ly}" pz="-${lz}" prow="-${M_PI/2}" ppit="0" pyaw="-${M_PI}"/>
+  <xacro:link_limb4 limbNo="5" parent="body" px="-${lx}" py="+${ly}" pz="+${lz}" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:link_limb4 limbNo="6" parent="body" px="-${lx}" py="-${ly}" pz="+${lz}" prow="-${M_PI/2}" ppit="0" pyaw="-${M_PI}"/>
+  <xacro:link_limb4 limbNo="7" parent="body" px="-${lx}" py="+${ly}" pz="-${lz}" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:link_limb4 limbNo="8" parent="body" px="-${lx}" py="-${ly}" pz="-${lz}" prow="-${M_PI/2}" ppit="0" pyaw="-${M_PI}"/>
+
+  <!-- End Effector -->
+  <property name="lengthEE" value="0.100"/>
+  <xacro:EE_gripper limbNo="1" parent="link1_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:EE_gripper limbNo="2" parent="link2_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:EE_gripper limbNo="3" parent="link3_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:EE_gripper limbNo="4" parent="link4_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:EE_gripper limbNo="5" parent="link5_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:EE_gripper limbNo="6" parent="link6_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:EE_gripper limbNo="7" parent="link7_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  <xacro:EE_gripper limbNo="8" parent="link8_4" px="+${lengthEE}" py="0" pz="0" prow="-${M_PI/2}" ppit="0" pyaw="0"/>
+  
+  <xacro:ControlAndImu namespace="/demo_robo" imu_body="body"/>
+</robot>

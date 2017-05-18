@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="EE_transmission" params="limbNo_t">
+    <!-- EE_up -->
+    <transmission name="tran${limbNo_t}_bu">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint${limbNo_t}_bu">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor${limbNo_t}_bu">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    <!-- EE_down -->
+    <transmission name="tran${limbNo_t}_bd">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="joint${limbNo_t}_bd">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="motor${limbNo_t}_bd">
+        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+</robot>
