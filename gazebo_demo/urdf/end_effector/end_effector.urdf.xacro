@@ -1,62 +1,62 @@
 <?xml version="1.0"?>
 <!-- XML namespaces -->
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find gazebo_demo)/urdf/end_effector/end_effector.gazebo.xacro"/>
   <xacro:include filename="$(find gazebo_demo)/urdf/end_effector/end_effector.transmission.xacro"/>
   <xacro:include filename="$(find gazebo_demo)/urdf/common.xacro"/>
 
   <!-- length and radius property of cylinder link of a limb -->
   <!-- EE_base -->
-  <property name="Eb_x"   value="0.010" />
-  <property name="Eb_y"   value="0.030" />
-  <property name="Eb_z"   value="${0.030+0.002}" /> <!-- 1mm margin -->
-  <property name="Eb_m"   value="0.050"/>
-  <property name="Eb_ixx" value="${(1/12)*Eb_m*(Eb_y*Eb_y+Eb_z*Eb_z)}"/>
-  <property name="Eb_iyy" value="${(1/12)*Eb_m*(Eb_x*Eb_x+Eb_z*Eb_z)}"/>
-  <property name="Eb_izz" value="${(1/12)*Eb_m*(Eb_x*Eb_x+Eb_y*Eb_y)}"/>
-  <property name="Eb_ixy" value="0" />
-  <property name="Eb_ixz" value="0" />
-  <property name="Eb_iyz" value="0" />
+  <xacro:property name="Eb_x"   value="0.010" />
+  <xacro:property name="Eb_y"   value="0.030" />
+  <xacro:property name="Eb_z"   value="${0.030+0.002}" /> <!-- 1mm margin -->
+  <xacro:property name="Eb_m"   value="0.050"/>
+  <xacro:property name="Eb_ixx" value="${(1/12)*Eb_m*(Eb_y*Eb_y+Eb_z*Eb_z)}"/>
+  <xacro:property name="Eb_iyy" value="${(1/12)*Eb_m*(Eb_x*Eb_x+Eb_z*Eb_z)}"/>
+  <xacro:property name="Eb_izz" value="${(1/12)*Eb_m*(Eb_x*Eb_x+Eb_y*Eb_y)}"/>
+  <xacro:property name="Eb_ixy" value="0" />
+  <xacro:property name="Eb_ixz" value="0" />
+  <xacro:property name="Eb_iyz" value="0" />
 
   <!-- EE_up -->
-  <property name="Eu_x"   value="0.050" />
-  <property name="Eu_y"   value="0.030" />
-  <property name="Eu_z"   value="0.010" />
-  <property name="Eu_m"   value="0.050"/>
-  <property name="Eu_ixx" value="${(1/12)*Eu_m*(Eu_y*Eu_y+Eu_z*Eu_z)}"/>
-  <property name="Eu_iyy" value="${(1/12)*Eu_m*(Eu_x*Eu_x+Eu_z*Eu_z)}"/>
-  <property name="Eu_izz" value="${(1/12)*Eu_m*(Eu_x*Eu_x+Eu_y*Eu_y)}"/>
-  <property name="Eu_ixy" value="0" />
-  <property name="Eu_ixz" value="0" />
-  <property name="Eu_iyz" value="0" />
-  <property name="Eu_up"  value="+${10*M_PI/180}"/>
-  <property name="Eu_lo"  value="-${M_PI/2 + 5 *M_PI/180}"/>
+  <xacro:property name="Eu_x"   value="0.050" />
+  <xacro:property name="Eu_y"   value="0.030" />
+  <xacro:property name="Eu_z"   value="0.010" />
+  <xacro:property name="Eu_m"   value="0.050"/>
+  <xacro:property name="Eu_ixx" value="${(1/12)*Eu_m*(Eu_y*Eu_y+Eu_z*Eu_z)}"/>
+  <xacro:property name="Eu_iyy" value="${(1/12)*Eu_m*(Eu_x*Eu_x+Eu_z*Eu_z)}"/>
+  <xacro:property name="Eu_izz" value="${(1/12)*Eu_m*(Eu_x*Eu_x+Eu_y*Eu_y)}"/>
+  <xacro:property name="Eu_ixy" value="0" />
+  <xacro:property name="Eu_ixz" value="0" />
+  <xacro:property name="Eu_iyz" value="0" />
+  <xacro:property name="Eu_up"  value="+${10*M_PI/180}"/>
+  <xacro:property name="Eu_lo"  value="-${M_PI/2 + 5 *M_PI/180}"/>
 
   <!-- EE_down -->
-  <property name="Ed_x"   value="0.025" />
-  <property name="Ed_y"   value="0.030" />
-  <property name="Ed_z"   value="0.010" />
-  <property name="Ed_m"   value="0.050"/>
-  <property name="Ed_ixx" value="${(1/12)*Ed_m*(Ed_y*Ed_y+Ed_z*Ed_z)}"/>
-  <property name="Ed_iyy" value="${(1/12)*Ed_m*(Ed_x*Ed_x+Ed_z*Ed_z)}"/>
-  <property name="Ed_izz" value="${(1/12)*Ed_m*(Ed_x*Ed_x+Ed_y*Ed_y)}"/>
-  <property name="Ed_ixy" value="0" />
-  <property name="Ed_ixz" value="0" />
-  <property name="Ed_iyz" value="0" />
-  <property name="Ed_up"  value="+${M_PI/2}"/>
-  <property name="Ed_lo"  value="-${10*M_PI/180}"/>
+  <xacro:property name="Ed_x"   value="0.025" />
+  <xacro:property name="Ed_y"   value="0.030" />
+  <xacro:property name="Ed_z"   value="0.010" />
+  <xacro:property name="Ed_m"   value="0.050"/>
+  <xacro:property name="Ed_ixx" value="${(1/12)*Ed_m*(Ed_y*Ed_y+Ed_z*Ed_z)}"/>
+  <xacro:property name="Ed_iyy" value="${(1/12)*Ed_m*(Ed_x*Ed_x+Ed_z*Ed_z)}"/>
+  <xacro:property name="Ed_izz" value="${(1/12)*Ed_m*(Ed_x*Ed_x+Ed_y*Ed_y)}"/>
+  <xacro:property name="Ed_ixy" value="0" />
+  <xacro:property name="Ed_ixz" value="0" />
+  <xacro:property name="Ed_iyz" value="0" />
+  <xacro:property name="Ed_up"  value="+${M_PI/2}"/>
+  <xacro:property name="Ed_lo"  value="-${10*M_PI/180}"/>
 
   <!-- EE_nail -->
-  <property name="En_x"   value="0.010" />
-  <property name="En_y"   value="0.030" />
-  <property name="En_z"   value="0.010" />
-  <property name="En_m"   value="0.020" />
-  <property name="En_ixx" value="${(1/12)*En_m*(En_y*En_y+En_z*En_z)}"/>
-  <property name="En_iyy" value="${(1/12)*En_m*(En_x*En_x+En_z*En_z)}"/>
-  <property name="En_izz" value="${(1/12)*En_m*(En_x*En_x+En_y*En_y)}"/>
-  <property name="En_ixy" value="0" />
-  <property name="En_ixz" value="0" />
-  <property name="En_iyz" value="0" />
+  <xacro:property name="En_x"   value="0.010" />
+  <xacro:property name="En_y"   value="0.030" />
+  <xacro:property name="En_z"   value="0.010" />
+  <xacro:property name="En_m"   value="0.020" />
+  <xacro:property name="En_ixx" value="${(1/12)*En_m*(En_y*En_y+En_z*En_z)}"/>
+  <xacro:property name="En_iyy" value="${(1/12)*En_m*(En_x*En_x+En_z*En_z)}"/>
+  <xacro:property name="En_izz" value="${(1/12)*En_m*(En_x*En_x+En_y*En_y)}"/>
+  <xacro:property name="En_ixy" value="0" />
+  <xacro:property name="En_ixz" value="0" />
+  <xacro:property name="En_iyz" value="0" />
 
 
   <!-- ============ EE Description ============ -->

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="limb4_gazebo" params="limbNo_g">
     <gazebo reference="link${limbNo_g}_1">
       <selfCollide>true</selfCollide>
@@ -13,7 +13,7 @@
     </gazebo>
     <gazebo reference="link${limbNo_g}_3">
       <selfCollide>true</selfCollide>
-        <mu1>0.5</mu1>
+      <mu1>0.5</mu1>
       <mu2>0.5</mu2>
     </gazebo>
     <gazebo reference="link${limbNo_g}_4">

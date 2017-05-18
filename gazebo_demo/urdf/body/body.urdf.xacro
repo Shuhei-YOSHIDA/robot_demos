@@ -6,18 +6,18 @@
 
   <!-- Geometry property for box -->
   <!-- body size -->
-  <property name="b_x" value="0.100"/>
-  <property name="b_y" value="0.100"/>
-  <property name="b_z" value="0.100"/>
+  <xacro:property name="b_x" value="0.100"/>
+  <xacro:property name="b_y" value="0.100"/>
+  <xacro:property name="b_z" value="0.100"/>
   <!-- body mass -->
-  <property name="b_m" value="0.300"/>
+  <xacro:property name="b_m" value="0.300"/>
   <!-- inertia tensol -->
-  <property name="b_ixx" value="${(1/12)*b_m*(b_y*b_y+b_z*b_z)}"/>
-  <property name="b_iyy" value="${(1/12)*b_m*(b_x*b_x+b_z*b_z)}"/>
-  <property name="b_izz" value="${(1/12)*b_m*(b_x*b_x+b_y*b_y)}"/>
-  <property name="b_ixy" value="0"/>
-  <property name="b_ixz" value="0"/>
-  <property name="b_iyz" value="0"/>
+  <xacro:property name="b_ixx" value="${(1/12)*b_m*(b_y*b_y+b_z*b_z)}"/>
+  <xacro:property name="b_iyy" value="${(1/12)*b_m*(b_x*b_x+b_z*b_z)}"/>
+  <xacro:property name="b_izz" value="${(1/12)*b_m*(b_x*b_x+b_y*b_y)}"/>
+  <xacro:property name="b_ixy" value="0"/>
+  <xacro:property name="b_ixz" value="0"/>
+  <xacro:property name="b_iyz" value="0"/>
 
   <!-- ============= Body Description ============= -->
   <xacro:macro name="BaseLinkToBody" params="name_">
