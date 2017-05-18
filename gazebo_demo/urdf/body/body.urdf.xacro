@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:include filename="$(find gazebo_demos)/urdf/body/body.gazebo.xacro"/>
-  <xacro:include filename="$(find gazebo_demos)/urdf/body/body.transmission.xacro"/>
-  <xacro:include filename="$(find gazebo_demos)/urdf/common.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/body/body.gazebo.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/body/body.transmission.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/common.xacro"/>
 
   <!-- Geometry property for box -->
   <!-- body size -->
@@ -20,13 +20,12 @@
   <property name="b_iyz" value="0"/>
 
   <!-- ============= Body Description ============= -->
-  <!-- baselinkToBody is better? -->
-  <xacro:macro name="WorldToBody" params="name_">
-      <joint name="jointwb" type="floating">
-        <parent link="world"/>
-        <child link="${name_}"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-      </joint> 
+  <xacro:macro name="BaseLinkToBody" params="name_">
+    <joint name="jointblTobody" type="fixed">
+      <parent link="base_link"/>
+      <child link="${name_}"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
     <!-- central body -->
     <link name="${name_}">
       <inertial>
@@ -51,7 +50,7 @@
       </collision>
     </link>
 
-    <xacro:WorldToBody_gazebo name="${name_}" />
-    <xacro:WorldToBody_transmission name="${name_}" />
+    <xacro:BaseLinkToBody_gazebo name="${name_}" />
+    <xacro:BaseLinkToBody_transmission name="${name_}" />
   </xacro:macro>
 </robot>

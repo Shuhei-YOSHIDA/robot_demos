@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="limbsys" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="demo_robo" >
   <!-- The following included files set up definitions of parts of the robot body -->
   <!-- misc common stuff? -->
-  <xacro:include filename="$(find gazebo_demos)/urdf/common.xacro" />
+  <xacro:include filename="$(find gazebo_demo)/urdf/common.xacro" />
   <!-- material definition -->
-  <xacro:include filename="$(find gazebo_demos)/urdf/material.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_demo)/urdf/material.urdf.xacro" />
   <!-- gazebo definition -->
-  <xacro:include filename="$(find gazebo_demos)/gazebo/gazebo.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_demo)/gazebo/gazebo.urdf.xacro" />
   <!-- body definition -->
-  <xacro:include filename="$(find gazebo_demos)/urdf/body/body.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_demo)/urdf/body/body.urdf.xacro" />
   <!-- limb definition -->
-  <xacro:include filename="$(find gazebo_demos)/urdf/limb/limb.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_demo)/urdf/limb/limb.urdf.xacro" />
   <!-- end effector definition -->
-  <xacro:include filename="$(find gazebo_demos)/urdf/end_effector/end_effector.urdf.xacro" />
+  <xacro:include filename="$(find gazebo_demo)/urdf/end_effector/end_effector.urdf.xacro" />
 
   <!-- Now we can start using the macros included above to define our robot -->
   <xacro:common/>
   <!-- body and 8 limbs -->
-  <xacro:WorldToBody name_="body"/>
+  <link name="base_link"/>
+  <xacro:BaseLinkToBody name_="body"/>
   <property name="lx" value="0.050"/>
   <property name="ly" value="0.050"/>
   <property name="lz" value="0.050"/>

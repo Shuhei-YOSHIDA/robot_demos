@@ -2,7 +2,7 @@
 <!-- XML namespaces -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:include filename="$(find gazebo_demo)/urdf/limb/limb.gazebo.xacro"/>
-  <xacro:include filename="$(find gazebo_demo)/urdf/limb/limb.transmission_position.xacro"/>
+  <xacro:include filename="$(find gazebo_demo)/urdf/limb/limb.transmission.xacro"/>
   <xacro:include filename="$(find gazebo_demo)/urdf/common.xacro"/>
 
   <!-- length and radius property of cylinder link of a limb -->
