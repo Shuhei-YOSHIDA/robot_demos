@@ -5,10 +5,10 @@
     <transmission name="tran${limbNo_t}_bu">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="joint${limbNo_t}_bu">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="motor${limbNo_t}_bu">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
@@ -16,10 +16,10 @@
     <transmission name="tran${limbNo_t}_bd">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="joint${limbNo_t}_bd">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="motor${limbNo_t}_bd">
-        <hardwareInterface>EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>

@@ -21,45 +21,5 @@
       <mu1>0.5</mu1>
       <mu2>0.5</mu2>
     </gazebo>
-    <gazebo reference="joint${limbNo_g}_01">
-      <erp>0.1</erp>
-      <stopKd value="1000000000.0" />
-      <stopKp value="1000000000.0" />
-      <fudgeFactor value="0.5" />
-      <cfmDamping>true</cfmDamping>
-      <axis>
-        <dynamics damping="0.7" friction="0"/>
-      </axis>
-    </gazebo>
-    <gazebo reference="joint${limbNo_g}_12">
-      <erp>0.1</erp>
-      <stopKd value="1000000000.0" />
-      <stopKp value="1000000000.0" />
-      <fudgeFactor value="0.5" />
-      <cfmDamping>true</cfmDamping>
-      <axis>
-        <dynamics damping="0.7" friction="0"/>
-      </axis>
-    </gazebo>
-    <gazebo reference="joint${limbNo_g}_23">
-      <erp>0.1</erp>
-      <stopKd value="1000000000.0" />
-      <stopKp value="1000000000.0" />
-      <fudgeFactor value="0.5" />
-      <cfmDamping>true</cfmDamping>
-      <axis>
-        <dynamics damping="0.7" friction="0"/>
-      </axis>
-    </gazebo>
-    <gazebo reference="joint${limbNo_g}_34">
-      <erp>0.1</erp>
-      <stopKd value="1000000000.0" />
-      <stopKp value="1000000000.0" />
-      <fudgeFactor value="0.5" />
-      <cfmDamping>true</cfmDamping>
-      <axis>
-        <dynamics damping="0.7" friction="0"/>
-      </axis>
-    </gazebo>
   </xacro:macro>
 </robot>
