@@ -1,0 +1,77 @@
+/demo_robo:
+# Publish all joint states ----------------------------------------------------
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 1000
+
+
+# Position Controllers --------------------------------------------------------
+    #Link1
+    joint1_01_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint1_01
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint1_12_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint1_12
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint1_23_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint1_23
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint1_34_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint1_34
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    #Link2
+    joint2_01_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint2_01
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint2_12_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint2_12
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint2_23_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint2_23
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint2_34_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint2_34
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    #Link3
+    joint3_01_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint3_01
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint3_12_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint3_12
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint3_23_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint3_23
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint3_34_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint3_34
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    #Link4
+    joint4_01_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint4_01
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint4_12_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint4_12
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint4_23_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint4_23
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+    joint4_34_position_controller: 
+        type: effort_controllers/JointPositionController
+        joint: joint4_34
+        pid: {p: 10, i: 1, d: 0.1, i_clamp_max: +3.6, i_clamp_min: -3.6}
+

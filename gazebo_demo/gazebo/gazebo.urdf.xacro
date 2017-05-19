@@ -3,7 +3,7 @@
   <xacro:macro name="ControlAndImu" params="namespace imu_body">
     <gazebo>
       <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-        <robotNamespace>/demo_robot</robotNamespace>
+        <robotNamespace>/demo_robo</robotNamespace>
         <controlPeriod>0.010</controlPeriod>
         <robotParam>/robot_description</robotParam>
         <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>

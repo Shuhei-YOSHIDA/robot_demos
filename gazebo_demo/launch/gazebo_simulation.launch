@@ -21,4 +21,28 @@
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" respawn="false" output="screen">
     <!--<remap from="/joint_states" to="/limbsys/joint_states" />-->
   </node>
+
+
+  <rosparam file="$(find gazebo_demo)/config/velocity_control.yaml" command="load"/>
+  <!-- Load the controllers -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/demo_robo" args="joint_state_controller 
+    joint1_01_position_controller
+    joint1_12_position_controller
+    joint1_23_position_controller
+    joint1_34_position_controller
+    joint2_01_position_controller
+    joint2_12_position_controller
+    joint2_23_position_controller
+    joint2_34_position_controller
+    joint3_01_position_controller
+    joint3_12_position_controller
+    joint3_23_position_controller
+    joint3_34_position_controller
+    joint4_01_position_controller
+    joint4_12_position_controller
+    joint4_23_position_controller
+    joint4_34_position_controller"
+  />
+
+
 </launch>
