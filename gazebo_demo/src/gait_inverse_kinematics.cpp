@@ -30,24 +30,18 @@ void JointStateFromMBC(rbd::MultiBody mb, rbd::MultiBodyConfig mbc, sensor_msgs:
 void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody mb, rbd::MultiBodyConfig &mbc)
 {
   // geometry_msgs/PoseArray has data in the order of quadraits. 
-  boost::shared_ptr<BodyTask> btask;
   auto m1 = msg->poses[0].position;
   sva::PTransformd X_O_T1 = sva::PTransformd(Vector3d(m1.x, m1.y, m1.z));
-  btask = boost::dynamic_pointer_cast<BodyTask>(tasks[0].second);
-  btask->_X_O_T = X_O_T1;
+  boost::static_pointer_cast<BodyTask>(tasks[0].second)->_X_O_T = X_O_T1;
   auto m2 = msg->poses[1].position;
   sva::PTransformd X_O_T2 = sva::PTransformd(Vector3d(m2.x, m2.y, m2.z));
-  btask = boost::dynamic_pointer_cast<BodyTask>(tasks[1].second);
-  btask->_X_O_T = X_O_T2;
+  boost::static_pointer_cast<BodyTask>(tasks[1].second)->_X_O_T = X_O_T2;
   auto m3 = msg->poses[2].position;
   sva::PTransformd X_O_T3 = sva::PTransformd(Vector3d(m3.x, m3.y, m2.z));
-  btask = boost::dynamic_pointer_cast<BodyTask>(tasks[2].second);
-  btask->_X_O_T = X_O_T3;
+  boost::static_pointer_cast<BodyTask>(tasks[2].second)->_X_O_T = X_O_T3;
   auto m4 = msg->poses[3].position;
   sva::PTransformd X_O_T4 = sva::PTransformd(Vector3d(m4.x, m4.y, m4.z));
-  //btask = boost::dynamic_pointer_cast<BodyTask>(tasks[3].second);
-  //btask->_X_O_T = X_O_T4;
-  boost::dynamic_pointer_cast<BodyTask>(tasks[3].second)->_X_O_T = X_O_T4;
+  boost::static_pointer_cast<BodyTask>(tasks[3].second)->_X_O_T = X_O_T4;
 
   manyTaskMin(mb, mbc, tasks, 1.0, 200);
   sensor_msgs::JointState js_msg;
