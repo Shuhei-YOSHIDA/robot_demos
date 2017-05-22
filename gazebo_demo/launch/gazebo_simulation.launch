@@ -13,15 +13,10 @@
   <param name="robot_description" command="$(find xacro)/xacro '$(find gazebo_demo)/robots/4limb_robot.urdf.xacro'"/>
   <!-- Spawn a robot into Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-param robot_description -urdf -z 0.100 -P 1.57 -model demo_robo" />
+
   <!-- Start the controller -->
 
-
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-  <!-- Joint State Publisher -->
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" respawn="false" output="screen">
-    <!--<remap from="/joint_states" to="/limbsys/joint_states" />-->
-  </node>
-
 
   <rosparam file="$(find gazebo_demo)/config/velocity_control.yaml" command="load"/>
   <!-- Load the controllers -->
@@ -44,5 +39,7 @@
     joint4_34_position_controller"
   />
 
-
+  <!-- gait -->
+  <node name="gait_publisher" pkg="gazebo_demo" type="gait.py"/>
+  <node name="gait_ik" pkg="gazebo_demo" type="gait_ik" respawn="true"/>
 </launch>
