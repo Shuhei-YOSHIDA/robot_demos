@@ -10,7 +10,10 @@
   </include>
 
   <!-- Load the URDF int the ROS Parameter Server -->
+<!--
   <param name="robot_description" command="$(find xacro)/xacro '$(find gazebo_demo)/robots/4limb_robot.urdf.xacro'"/>
+-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find romeo_description)/urdf/romeo_generated_urdf/romeo_robot.xacro"/>
   <!-- Spawn a robot into Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-param robot_description -urdf -z 0.100 -P 1.57 -model demo_robo" />
 
@@ -41,5 +44,5 @@
 
   <!-- gait -->
   <node name="gait_publisher" pkg="gazebo_demo" type="gait.py"/>
-  <node name="gait_ik" pkg="gazebo_demo" type="gait_ik" respawn="true"/>
+  <node name="gait_ik" pkg="gazebo_demo" type="gait_ik" respawn="true" output="screen"/>
 </launch>

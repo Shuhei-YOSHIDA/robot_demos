@@ -266,7 +266,7 @@ void manyTaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr task
         // compute alpha
         // J*alpha = -g
         VectorXd alpha;
-        alpha = -PseudoInverse(J, 1e-9)*g;//least square ?
+        alpha = -PseudoInverse(J)*g;//least square ?
 
         // integrate and run the forward kinematics
         mbc.alpha = rbd::vectorToDof(mb, alpha);
@@ -294,6 +294,8 @@ void manyTaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr task
         if (alphaInf < prec) minimizer = true;
         iterate++;
     }
+    if (minimizer) ROS_INFO("minimized");
+    if (iterate>=maxIter) ROS_INFO("max_itr");
 }
 
 

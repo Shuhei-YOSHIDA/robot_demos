@@ -105,7 +105,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES gazebo_demo
 #  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
+  DEPENDS Eigen3
 )
 
 ###########
@@ -117,7 +117,8 @@ catkin_package(
 # include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  /usr/include/eigen3
+  # /usr/include/eigen3
+  ${EIGEN3_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library

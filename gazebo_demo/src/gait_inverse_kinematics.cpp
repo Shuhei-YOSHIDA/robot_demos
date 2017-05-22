@@ -8,7 +8,8 @@
 
 rbdyn_urdf::Urdf robot_data;
 MultiTaskPtr tasks;
-std::string ee_names[4] = {"link1_4", "link2_4", "link4_4", "link3_4"};
+//std::string ee_names[4] = {"link1_4", "link2_4", "link4_4", "link3_4"};
+std::string ee_names[4] = {"l_wrist", "r_wrist", "r_ankle", "l_ankle"};
 ros::Subscriber sub;
 ros::Publisher pub;
 
@@ -81,7 +82,7 @@ int main(int argc, char **argv)
   tasks.push_back(std::pair<double, TaskPtr>(10000000, bodytask2));
   tasks.push_back(std::pair<double, TaskPtr>(10000000, bodytask3));
   tasks.push_back(std::pair<double, TaskPtr>(10000000, bodytask4));
-  tasks.push_back(std::pair<double, TaskPtr>(1.0, posturetask));
+  //tasks.push_back(std::pair<double, TaskPtr>(1.0, posturetask));
 
   pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
   sub = nh.subscribe<geometry_msgs::PoseArray>("gait_pose", 1, boost::bind(gaitCallback, _1, mb, mbc));
