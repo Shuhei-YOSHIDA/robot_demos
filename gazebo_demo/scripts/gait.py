@@ -13,11 +13,11 @@ class GaitData():
         self.swing_height = height
         self.frame_id = 'base_link'
         self.stride = 0.100
-        # base_link, yz-plane, the order of quadrants
-        self.position_refs = [[+0.150, +0.150, +0.150 ], 
-                              [+0.150, -0.150, +0.150 ], 
-                              [+0.150, -0.150, -0.150 ], 
-                              [+0.150, +0.150, -0.150 ] ]
+        # base_link, yz-plane, the order of leg
+        self.position_refs = [[+0.280, +0.155, +0.150 ], #limb1
+                              [+0.280, -0.155, +0.150 ], 
+                              [+0.280, +0.155, -0.150 ], 
+                              [+0.280, -0.155, -0.150 ] ]
 
     # Call this at each sampling time
     def trot_phases(self, dt):
@@ -45,9 +45,9 @@ def trot_gait(gait_data, pub_hz):
     for i in range(len(tps)):
         leg_idx = leg_order[i]
         if 0<=tps[i]<=gait_data.cycle_time/4.: #swing
-            poses.poses[i] = swing_pos(gait_data, leg_idx, tps[i], gait_data.cycle_time/4.0)
+            poses.poses[leg_idx] = swing_pos(gait_data, leg_idx, tps[i], gait_data.cycle_time/4.0)
         else: #returning
-            poses.poses[i] = stance_pos(gait_data, leg_idx, tps[i]-gait_data.cycle_time/4.0, gait_data.cycle_time*3.0/4.0)
+            poses.poses[leg_idx] = stance_pos(gait_data, leg_idx, tps[i]-gait_data.cycle_time/4.0, gait_data.cycle_time*3.0/4.0)
         poses.header.stamp = stamp
         poses.header.frame_id = gait_data.frame_id
 

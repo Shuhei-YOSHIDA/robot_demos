@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /Axes1
       Splitter Ratio: 0.5
     Tree Height: 565
   - Class: rviz/Selection
@@ -169,6 +170,13 @@ Visualization Manager:
       Topic: /gait_pose
       Unreliable: false
       Value: true
+    - Class: rviz/Axes
+      Enabled: true
+      Length: 0.300000012
+      Name: Axes
+      Radius: 0.00999999978
+      Reference Frame: <Fixed Frame>
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -207,10 +215,10 @@ Visualization Manager:
       Focal Shape Size: 0.0500000007
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.399797022
+      Pitch: 0.0397972427
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.925398111
+      Yaw: 0.910397887
     Saved: ~
 Window Geometry:
   Displays:

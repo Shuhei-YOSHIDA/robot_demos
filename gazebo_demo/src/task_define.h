@@ -27,7 +27,7 @@ class BodyTask : public Task {
 
 public:
     BodyTask(rbd::MultiBody mb, string bodyName, sva::PTransformd X_O_T, 
-             sva::PTransformd X_b_p = sva::PTransformd::Identity(), string name = "BodyTask")
+             sva::PTransformd X_b_p = sva::PTransformd::Identity(), string part = "",  string name = "BodyTask")
     {
         /*
         Compute the error and the jacobian to target a static frame for a body.
@@ -36,6 +36,7 @@ public:
         - bodyId: ID of the body that should move
         - X_0_T: targeted frame (PTransformd)
         - X_b_p: static frame on the body bodyId
+        - part: "position", "rotation", something else
         */
         _name = name;
         _bodyName = bodyName;
@@ -43,8 +44,9 @@ public:
         _X_O_T = X_O_T;
         _X_b_p = X_b_p;
         _jac = rbd::Jacobian(mb, bodyName);
-        _jac_mat_sparse = MatrixXd::Zero(6, mb.nrDof());//mb.nrParams?
+        _jac_mat_sparse = MatrixXd::Zero(6, mb.nrDof());
         _type = "BodyTask";
+        _part = part;
     }
 
     sva::PTransformd X_O_p(rbd::MultiBodyConfig mbc) 
@@ -58,6 +60,8 @@ public:
     {
         auto X_O_p = this->X_O_p(mbc);
         auto g_body = sva::transformError(_X_O_T, X_O_p);//MotionVec
+        if      (_part == "position") return g_body.vector().segment(3, 3);
+        else if (_part == "rotation") return g_body.vector().segment(0, 3);
         return g_body.vector();
     }
 
@@ -68,6 +72,8 @@ public:
         sva::PTransformd X_O_p_0 = sva::PTransformd(X_O_p.rotation()).inv() * X_O_p;
         MatrixXd jac_mat_dense = _jac.jacobian(mb, mbc, X_O_p_0);
         _jac.fullJacobian(mb, jac_mat_dense, _jac_mat_sparse);
+        if      (_part == "position") return _jac_mat_sparse.block(3, 0, 3, mb.nrDof());
+        else if (_part == "rotation") return _jac_mat_sparse.block(0, 0, 3, mb.nrDof());
         return _jac_mat_sparse;
     }
     string _bodyName;
@@ -76,6 +82,7 @@ public:
     sva::PTransformd _X_b_p;
     rbd::Jacobian  _jac;
     MatrixXd _jac_mat_sparse;
+    string _part;
 };
 
 
@@ -294,8 +301,7 @@ void manyTaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr task
         if (alphaInf < prec) minimizer = true;
         iterate++;
     }
-    if (minimizer) ROS_INFO("minimized");
-    if (iterate>=maxIter) ROS_INFO("max_itr");
+    if (iterate>=maxIter) ROS_DEBUG("max_itr");
 }
 
 

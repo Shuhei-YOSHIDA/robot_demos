@@ -8,8 +8,8 @@
 
 rbdyn_urdf::Urdf robot_data;
 MultiTaskPtr tasks;
-//std::string ee_names[4] = {"link1_4", "link2_4", "link4_4", "link3_4"};
-std::string ee_names[4] = {"l_wrist", "r_wrist", "r_ankle", "l_ankle"};
+std::string ee_names[4] = {"link1_4", "link2_4", "link3_4", "link4_4"};
+//std::string ee_names[4] = {"l_wrist", "r_wrist", "r_ankle", "l_ankle"};
 ros::Subscriber sub;
 ros::Publisher pub;
 
@@ -29,19 +29,13 @@ void JointStateFromMBC(rbd::MultiBody mb, rbd::MultiBodyConfig mbc, sensor_msgs:
 
 void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody mb, rbd::MultiBodyConfig &mbc)
 {
-  // geometry_msgs/PoseArray has data in the order of quadraits. 
-  auto m1 = msg->poses[0].position;
-  sva::PTransformd X_O_T1 = sva::PTransformd(Vector3d(m1.x, m1.y, m1.z));
-  boost::static_pointer_cast<BodyTask>(tasks[0].second)->_X_O_T = X_O_T1;
-  auto m2 = msg->poses[1].position;
-  sva::PTransformd X_O_T2 = sva::PTransformd(Vector3d(m2.x, m2.y, m2.z));
-  boost::static_pointer_cast<BodyTask>(tasks[1].second)->_X_O_T = X_O_T2;
-  auto m3 = msg->poses[2].position;
-  sva::PTransformd X_O_T3 = sva::PTransformd(Vector3d(m3.x, m3.y, m2.z));
-  boost::static_pointer_cast<BodyTask>(tasks[2].second)->_X_O_T = X_O_T3;
-  auto m4 = msg->poses[3].position;
-  sva::PTransformd X_O_T4 = sva::PTransformd(Vector3d(m4.x, m4.y, m4.z));
-  boost::static_pointer_cast<BodyTask>(tasks[3].second)->_X_O_T = X_O_T4;
+  // geometry_msgs/PoseArray has data in the order of legs. 
+  for (int i = 0; i < 4; i++)
+  {
+    auto pos = msg->poses[i].position;
+    auto X_O_Ti = sva::PTransformd(Vector3d(pos.x, pos.y, pos.z));
+    boost::static_pointer_cast<BodyTask>(tasks[i].second)->_X_O_T = X_O_Ti;
+  }
 
   manyTaskMin(mb, mbc, tasks, 1.0, 200);
   sensor_msgs::JointState js_msg;
@@ -67,15 +61,15 @@ int main(int argc, char **argv)
   rbd::forwardVelocity(mb, mbc);
   TaskPtr posturetask(new PostureTask(mb, mbc));
   sva::PTransformd X_O_T = sva::PTransformd(Eigen::Vector3d(0,0,0));
-  sva::PTransformd x_b_p = sva::PTransformd(Eigen::Vector3d(0.100,0,0));
-  TaskPtr bodytask1(new BodyTask(mb, ee_names[0], X_O_T, x_b_p, "bodytask1"));
-  TaskPtr bodytask2(new BodyTask(mb, ee_names[1], X_O_T, x_b_p, "bodytask2"));
-  TaskPtr bodytask3(new BodyTask(mb, ee_names[2], X_O_T, x_b_p, "bodytask3"));
-  TaskPtr bodytask4(new BodyTask(mb, ee_names[3], X_O_T, x_b_p, "bodytask4"));
-  tasks.push_back(std::pair<double, TaskPtr>(10000000, bodytask1));
-  tasks.push_back(std::pair<double, TaskPtr>(10000000, bodytask2));
-  tasks.push_back(std::pair<double, TaskPtr>(10000000, bodytask3));
-  tasks.push_back(std::pair<double, TaskPtr>(10000000, bodytask4));
+  sva::PTransformd x_b_p = sva::PTransformd(Eigen::Vector3d(0.140,0,0));
+  TaskPtr bodytask1(new BodyTask(mb, ee_names[0], X_O_T, x_b_p, "position", "bodytask1"));
+  TaskPtr bodytask2(new BodyTask(mb, ee_names[1], X_O_T, x_b_p, "position", "bodytask2"));
+  TaskPtr bodytask3(new BodyTask(mb, ee_names[2], X_O_T, x_b_p, "position", "bodytask3"));
+  TaskPtr bodytask4(new BodyTask(mb, ee_names[3], X_O_T, x_b_p, "position", "bodytask4"));
+  tasks.push_back(std::pair<double, TaskPtr>(100, bodytask1));
+  tasks.push_back(std::pair<double, TaskPtr>(100, bodytask2));
+  tasks.push_back(std::pair<double, TaskPtr>(100, bodytask3));
+  tasks.push_back(std::pair<double, TaskPtr>(100, bodytask4));
   //tasks.push_back(std::pair<double, TaskPtr>(1.0, posturetask));
 
   pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
