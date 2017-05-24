@@ -8,6 +8,7 @@
 
 rbdyn_urdf::Urdf robot_data;
 MultiTaskPtr tasks;
+InverseMethodPtr method;
 std::string ee_names[4] = {"link1_4", "link2_4", "link3_4", "link4_4"};
 //std::string ee_names[4] = {"l_wrist", "r_wrist", "r_ankle", "l_ankle"};
 ros::Subscriber sub;
@@ -27,6 +28,7 @@ void JointStateFromMBC(rbd::MultiBody mb, rbd::MultiBodyConfig mbc, sensor_msgs:
     msg.header.stamp = ros::Time::now();
 }
 
+
 void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody mb, rbd::MultiBodyConfig &mbc)
 {
   // geometry_msgs/PoseArray has data in the order of legs. 
@@ -37,7 +39,8 @@ void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody 
     boost::static_pointer_cast<BodyTask>(tasks[i].second)->_X_O_T = X_O_Ti;
   }
 
-  manyTaskMin(mb, mbc, tasks, 1.0, 200);
+  //manyTaskMin(mb, mbc, tasks, 1.0, 200);
+  TaskMin(mb, mbc, tasks, method, 1.0, 200);
   for (auto&& var : mbc.q)
   {
     for (auto&& var2 : var)
@@ -79,6 +82,16 @@ int main(int argc, char **argv)
   tasks.push_back(std::pair<double, TaskPtr>(100, bodytask3));
   tasks.push_back(std::pair<double, TaskPtr>(100, bodytask4));
   //tasks.push_back(std::pair<double, TaskPtr>(1.0, posturetask));
+
+  int row = 0;
+  int col = mb.nrDof();
+  for (auto&& var : tasks) {
+      auto j = var.second->J(mb, mbc);
+      row+=j.rows();
+  }
+  MatrixXd Wl = MatrixXd::Identity(col, col);
+  MatrixXd We = MatrixXd::Identity(row, row)*100;
+  method = InverseMethodPtr(new LMInvConsideredSolvality(Wl, We));
 
   pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
   sub = nh.subscribe<geometry_msgs::PoseArray>("gait_pose", 1, boost::bind(gaitCallback, _1, mb, mbc));

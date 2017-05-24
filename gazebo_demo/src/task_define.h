@@ -304,4 +304,106 @@ void manyTaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr task
     if (iterate>=maxIter) ROS_DEBUG("max_itr");
 }
 
+class InverseMethod {
+    public:
+        ~InverseMethod(){};
+        virtual VectorXd solve(VectorXd g, MatrixXd J) = 0;
+        string _type;
+};
+typedef boost::shared_ptr<InverseMethod> InverseMethodPtr;
+
+class MPInverse : public InverseMethod {
+    public:
+        MPInverse() {
+
+        }
+
+        VectorXd solve(VectorXd g, MatrixXd J) {
+            VectorXd alpha = -PseudoInverse(J)*g;
+            return alpha;
+        }
+};
+
+class LMInvConsideredSolvality : public InverseMethod {
+    public:
+        LMInvConsideredSolvality(MatrixXd Wl, MatrixXd We) {
+            //_Wl.rows() == _Wl.cols() == J.cols()
+            //_We.rows() == _We.cols() == J.rows()
+            _Wl = Wl;
+            _We = We;
+            _ramda_n = 10e-3;
+        }
+
+        VectorXd solve(VectorXd g, MatrixXd J) {
+            double epsilon = g.transpose() * _We * g;
+            MatrixXd tmp = J * _Wl.inverse() * J.transpose();
+            tmp += epsilon * MatrixXd::Identity(tmp.rows(), tmp.cols());
+            MatrixXd J_sharp = _Wl.inverse() * J.transpose() * tmp.inverse();
+            VectorXd alpha = J_sharp * (-g);
+            return alpha;
+        }
+
+        MatrixXd _Wl;
+        MatrixXd _We;
+        double _ramda_n;
+};
+
+void TaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr tasks, InverseMethodPtr method, 
+             double delta = 1.0, unsigned int maxIter = 100, double prec = 1e-8)
+{
+    auto q = rbd::paramToVector(mb, mbc.q);
+    unsigned int iterate = 0;
+    bool minimizer = false;
+    while (iterate < maxIter && !minimizer) {
+        // compute task data such as w*g, w*J
+        std::vector<VectorXd> gList;
+        std::vector<MatrixXd> JList;
+        int height = 0;
+        for (auto itr = tasks.begin(); itr != tasks.end(); ++itr) {
+            VectorXd gi = itr->first * itr->second->g(mb, mbc);
+            MatrixXd Ji = itr->first * itr->second->J(mb, mbc);
+
+            gList.push_back(gi);
+            JList.push_back(Ji);
+            height+=gi.size();//J.rows == g.rows
+        }
+
+        //concatinate gList, JList
+        int width = mb.nrDof();
+        VectorXd g(height);
+        MatrixXd J(height, width);
+        int len = 0;
+        for (auto itr = gList.begin(); itr != gList.end(); ++itr) {
+            g.segment(len, itr->size()) = *itr;
+            len+=itr->size();
+        }
+        len = 0;
+        for (auto itr = JList.begin(); itr != JList.end(); ++itr) {
+            J.block(len, 0, itr->rows(), width) = *itr;
+            len+=itr->rows();
+        }
+
+        // compute alpha
+        // J*alpha = -g
+        VectorXd alpha;
+        alpha = method->solve(g, J);
+
+        // integrate and run the forward kinematics
+        mbc.alpha = rbd::vectorToDof(mb, alpha);
+        rbd::eulerIntegration(mb, mbc, delta);
+        rbd::forwardKinematics(mb, mbc);
+
+        // take the new q vector
+        q = rbd::paramToVector(mb, mbc.q);
+
+        //H-infinite norm?
+        auto alphaInf = alpha.lpNorm<Infinity>();
+
+        // check if the current alpha is a minimizer
+        if (alphaInf < prec) minimizer = true;
+        iterate++;
+    }
+    if (iterate>=maxIter) ROS_DEBUG("max_itr");
+}
+
 
