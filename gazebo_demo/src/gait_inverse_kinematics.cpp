@@ -38,6 +38,14 @@ void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody 
   }
 
   manyTaskMin(mb, mbc, tasks, 1.0, 200);
+  for (auto&& var : mbc.q)
+  {
+    for (auto&& var2 : var)
+    {
+      while(var2 < -M_PI) var2+=2*M_PI;
+      while(+M_PI < var2) var2-=2*M_PI;
+    }
+  }
   sensor_msgs::JointState js_msg;
   JointStateFromMBC(mb, mbc, js_msg);
   pub.publish(js_msg);
