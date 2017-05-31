@@ -42,7 +42,7 @@
   />
 
   <!-- gait -->
-  <node name="gait_publisher" pkg="gazebo_demo" type="gait.py"/>
+  <node name="gait_publisher" pkg="gazebo_demo" type="gait.py" respawn="true"/>
   <node name="gait_ik" pkg="gazebo_demo" type="gait_ik" respawn="true" output="screen"/>
 
   <!-- rviz -->
