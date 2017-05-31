@@ -177,7 +177,9 @@ class InverseMethod {
     public:
         ~InverseMethod(){};
         virtual VectorXd solve(VectorXd g, MatrixXd J) = 0;
+        virtual void setConfiguration(VectorXd q) = 0; //option
         string _type;
+        VectorXd _q; //option
 };
 typedef boost::shared_ptr<InverseMethod> InverseMethodPtr;
 
@@ -191,6 +193,8 @@ class MPInverse : public InverseMethod {
             VectorXd alpha = -PseudoInverse(J)*g;
             return alpha;
         }
+
+        void setConfiguration(VectorXd q) {}
 };
 
 class LMInvConsideredSolvality : public InverseMethod {
@@ -212,15 +216,66 @@ class LMInvConsideredSolvality : public InverseMethod {
             return alpha;
         }
 
+        void setConfiguration(VectorXd q) {}
+
         MatrixXd _Wl;
         MatrixXd _We;
         double _ramda_n;
 };
 
+class LMInvConsideredSolvalityWithLimit : public InverseMethod {
+    public:
+        LMInvConsideredSolvalityWithLimit(MatrixXd Wl, MatrixXd We, VectorXd hi_limit, VectorXd lo_limit) {
+            //_Wl.rows() == _Wl.cols() == J.cols()
+            //_We.rows() == _We.cols() == J.rows()
+            _Wl = Wl;
+            _We = We;
+            _ramda_n = 10e-3;
+            _k = 10e-8;
+            _hi_limit = hi_limit;
+            _lo_limit = lo_limit;
+        }
+
+        VectorXd solve(VectorXd g, MatrixXd J) {
+            double epsilon = g.transpose() * _We * g;
+            MatrixXd tmp = J * _Wl.inverse() * J.transpose();
+            tmp += epsilon * MatrixXd::Identity(tmp.rows(), tmp.cols());
+            MatrixXd J_sharp = _Wl.inverse() * J.transpose() * tmp.inverse();
+            VectorXd alpha = J_sharp * (-g) + _k * (MatrixXd::Identity(J.cols(), J.cols()) - J_sharp*J) * evaluateLimit();
+            return alpha;
+        }
+
+        //Call this before solve()
+        void setConfiguration(VectorXd q) {
+            _q = q;
+        }
+
+        VectorXd evaluateLimit() {
+            VectorXd g_ik_d = VectorXd::Zero(_q.size());
+            for (int i = 0; i < _q.size(); i++) {
+                double th = _q[i];
+                double hi = _hi_limit[i];
+                double lo = _lo_limit[i];
+                g_ik_d[i] = 1.0 / ((th-hi)*(th-hi)*(th-hi)) + 1.0 / ((th-lo)*(th-lo)*(th-lo));
+                g_ik_d[i] = 2*g_ik_d[i];
+            }
+            return g_ik_d;
+        }
+
+
+        MatrixXd _Wl;
+        MatrixXd _We;
+        double _ramda_n;
+        double _k;
+        VectorXd _hi_limit;
+        VectorXd _lo_limit;
+};
+
+
 void TaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr tasks, InverseMethodPtr method, 
              double delta = 1.0, unsigned int maxIter = 100, double prec = 1e-8)
 {
-    auto q = rbd::paramToVector(mb, mbc.q);
+    //auto q = rbd::paramToVector(mb, mbc.q);
     unsigned int iterate = 0;
     bool minimizer = false;
     while (iterate < maxIter && !minimizer) {
@@ -254,8 +309,8 @@ void TaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr tasks, I
 
         // compute alpha
         // J*alpha = -g
-        VectorXd alpha;
-        alpha = method->solve(g, J);
+        method->setConfiguration(rbd::dofToVector(mb, mbc.q));
+        VectorXd alpha = method->solve(g, J);
 
         // integrate and run the forward kinematics
         mbc.alpha = rbd::vectorToDof(mb, alpha);
@@ -263,7 +318,7 @@ void TaskMin(rbd::MultiBody mb, rbd::MultiBodyConfig &mbc, MultiTaskPtr tasks, I
         rbd::forwardKinematics(mb, mbc);
 
         // take the new q vector
-        q = rbd::paramToVector(mb, mbc.q);
+        //q = rbd::paramToVector(mb, mbc.q);
 
         //H-infinite norm?
         auto alphaInf = alpha.lpNorm<Infinity>();

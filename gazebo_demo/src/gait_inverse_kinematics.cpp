@@ -39,8 +39,7 @@ void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody 
     boost::static_pointer_cast<BodyTask>(tasks[i].second)->_X_O_T = X_O_Ti;
   }
 
-  //manyTaskMin(mb, mbc, tasks, 1.0, 200);
-  TaskMin(mb, mbc, tasks, method, 1.0, 200);
+  TaskMin(mb, mbc, tasks, method, 1.0, 200, 1e-7);
   for (auto&& var : mbc.q)
   {
     for (auto&& var2 : var)
@@ -91,7 +90,10 @@ int main(int argc, char **argv)
   }
   MatrixXd Wl = MatrixXd::Identity(col, col);
   MatrixXd We = MatrixXd::Identity(row, row)*100;
-  method = InverseMethodPtr(new LMInvConsideredSolvality(Wl, We));
+  //method = InverseMethodPtr(new LMInvConsideredSolvality(Wl, We));
+  VectorXd HiLimit = VectorXd::Ones(col) * (+150.0) * M_PI/180.0;
+  VectorXd LoLimit = VectorXd::Ones(col) * (-150.0) * M_PI/180.0;
+  method = InverseMethodPtr(new LMInvConsideredSolvalityWithLimit(Wl, We, HiLimit, LoLimit));
 
   pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
   sub = nh.subscribe<geometry_msgs::PoseArray>("gait_pose", 1, boost::bind(gaitCallback, _1, mb, mbc));
