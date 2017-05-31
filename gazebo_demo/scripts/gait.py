@@ -20,7 +20,7 @@ class GaitData():
                               [+0.280, -0.155, -0.150 ] ]
 
     # Call this at each sampling time
-    def trot_phases(self, dt):
+    def crawl_phases(self, dt):
         if self.current_time >= self.cycle_time:
             self.current_time = 0
         self.current_time += dt
@@ -35,8 +35,8 @@ class GaitData():
         return phases
 
 
-def trot_gait(gait_data, pub_hz):
-    tps = gait_data.trot_phases(1.0/pub_hz)
+def crawl_gait(gait_data, pub_hz):
+    tps = gait_data.crawl_phases(1.0/pub_hz)
     poses = PoseArray()
     poses.poses = [Pose() for i in range(4)]
     # decide leg order
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         pub_hz = 100.0
         r = rospy.Rate(pub_hz)
         while not rospy.is_shutdown():
-            pub.publish(trot_gait(gd, pub_hz))
+            pub.publish(crawl_gait(gd, pub_hz))
             r.sleep()
 
     except rospy.ROSInterruptException: pass
