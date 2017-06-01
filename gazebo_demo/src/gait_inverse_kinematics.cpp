@@ -70,8 +70,8 @@ int main(int argc, char **argv)
   rbd::forwardKinematics(mb, mbc);
   rbd::forwardVelocity(mb, mbc);
   TaskPtr posturetask(new PostureTask(mb, mbc));
-  sva::PTransformd X_O_T = sva::PTransformd(Eigen::Vector3d(0,0,0));
-  sva::PTransformd x_b_p = sva::PTransformd(Eigen::Vector3d(0.140,0,0));
+  sva::PTransformd X_O_T = sva::PTransformd(Eigen::Vector3d(0,0,0)); //Temporal value
+  sva::PTransformd x_b_p = sva::PTransformd(Eigen::Vector3d(0.140,0,0)); //To end-effector point
   TaskPtr bodytask1(new BodyTask(mb, ee_names[0], X_O_T, x_b_p, "position", "bodytask1"));
   TaskPtr bodytask2(new BodyTask(mb, ee_names[1], X_O_T, x_b_p, "position", "bodytask2"));
   TaskPtr bodytask3(new BodyTask(mb, ee_names[2], X_O_T, x_b_p, "position", "bodytask3"));
@@ -90,9 +90,32 @@ int main(int argc, char **argv)
   }
   MatrixXd Wl = MatrixXd::Identity(col, col);
   MatrixXd We = MatrixXd::Identity(row, row)*100;
-  //method = InverseMethodPtr(new LMInvConsideredSolvality(Wl, We));
+  //Set limits for LMInvConsideredSolvalityWithLimit
   VectorXd HiLimit = VectorXd::Ones(col) * (+150.0) * M_PI/180.0;
   VectorXd LoLimit = VectorXd::Ones(col) * (-150.0) * M_PI/180.0;
+  rbd::MultiBodyConfig mbchi(mb), mbclo(mb);
+  mbchi.q = rbd::vectorToDof(mb, HiLimit);
+  mbclo.q = rbd::vectorToDof(mb, LoLimit);
+  //Each value setting
+  mbchi.q[mb.jointIndexByName("joint1_01")][0] = (+10.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint2_01")][0] = (-10.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint3_01")][0] = (-10.0) * M_PI/180.0;
+  mbchi.q[mb.jointIndexByName("joint4_01")][0] = (+10.0) * M_PI/180.0;
+
+  mbchi.q[mb.jointIndexByName("joint1_34")][0] = (+10.0) * M_PI/180.0;
+  mbchi.q[mb.jointIndexByName("joint2_34")][0] = (+10.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint3_34")][0] = (-10.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint4_34")][0] = (-10.0) * M_PI/180.0;
+  HiLimit = rbd::dofToVector(mb, mbchi.q);
+  LoLimit = rbd::dofToVector(mb, mbclo.q);
+
+  //initial joint should not be exceeded from limits
+  //mbc.q[mb.jointIndexByName("joint1_01")][0] = (+10.0) * M_PI/180.0 - 0.1;
+  //mbc.q[mb.jointIndexByName("joint2_01")][0] = (-10.0) * M_PI/180.0 + 0.1;
+  //mbc.q[mb.jointIndexByName("joint3_01")][0] = (-10.0) * M_PI/180.0 + 0.1;
+  //mbc.q[mb.jointIndexByName("joint4_01")][0] = (+10.0) * M_PI/180.0 - 0.1;
+
+  //method = InverseMethodPtr(new LMInvConsideredSolvality(Wl, We));
   method = InverseMethodPtr(new LMInvConsideredSolvalityWithLimit(Wl, We, HiLimit, LoLimit));
 
   pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
