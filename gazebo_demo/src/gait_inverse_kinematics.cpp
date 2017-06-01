@@ -39,7 +39,7 @@ void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody 
     boost::static_pointer_cast<BodyTask>(tasks[i].second)->_X_O_T = X_O_Ti;
   }
 
-  TaskMin(mb, mbc, tasks, method, 1.0, 200, 1e-7);
+  TaskMin(mb, mbc, tasks, method, 1.0, 200, 1e-6);
   for (auto&& var : mbc.q)
   {
     for (auto&& var2 : var)
@@ -97,10 +97,15 @@ int main(int argc, char **argv)
   mbchi.q = rbd::vectorToDof(mb, HiLimit);
   mbclo.q = rbd::vectorToDof(mb, LoLimit);
   //Each value setting
-  mbchi.q[mb.jointIndexByName("joint1_01")][0] = (+10.0) * M_PI/180.0;
-  mbclo.q[mb.jointIndexByName("joint2_01")][0] = (-10.0) * M_PI/180.0;
-  mbclo.q[mb.jointIndexByName("joint3_01")][0] = (-10.0) * M_PI/180.0;
-  mbchi.q[mb.jointIndexByName("joint4_01")][0] = (+10.0) * M_PI/180.0;
+  mbchi.q[mb.jointIndexByName("joint1_01")][0] = (+30.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint2_01")][0] = (-30.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint3_01")][0] = (-30.0) * M_PI/180.0;
+  mbchi.q[mb.jointIndexByName("joint4_01")][0] = (+30.0) * M_PI/180.0;
+
+  mbchi.q[mb.jointIndexByName("joint1_23")][0] = (+10.0) * M_PI/180.0;
+  mbchi.q[mb.jointIndexByName("joint2_23")][0] = (+10.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint3_23")][0] = (-10.0) * M_PI/180.0;
+  mbclo.q[mb.jointIndexByName("joint4_23")][0] = (-10.0) * M_PI/180.0;
 
   mbchi.q[mb.jointIndexByName("joint1_34")][0] = (+10.0) * M_PI/180.0;
   mbchi.q[mb.jointIndexByName("joint2_34")][0] = (+10.0) * M_PI/180.0;
@@ -110,10 +115,15 @@ int main(int argc, char **argv)
   LoLimit = rbd::dofToVector(mb, mbclo.q);
 
   //initial joint should not be exceeded from limits
-  //mbc.q[mb.jointIndexByName("joint1_01")][0] = (+10.0) * M_PI/180.0 - 0.1;
-  //mbc.q[mb.jointIndexByName("joint2_01")][0] = (-10.0) * M_PI/180.0 + 0.1;
-  //mbc.q[mb.jointIndexByName("joint3_01")][0] = (-10.0) * M_PI/180.0 + 0.1;
-  //mbc.q[mb.jointIndexByName("joint4_01")][0] = (+10.0) * M_PI/180.0 - 0.1;
+  mbc.q[mb.jointIndexByName("joint1_01")][0] = (-90.0) * M_PI/180.0;
+  mbc.q[mb.jointIndexByName("joint2_01")][0] = (+90.0) * M_PI/180.0;
+  mbc.q[mb.jointIndexByName("joint3_01")][0] = (+90.0) * M_PI/180.0;
+  mbc.q[mb.jointIndexByName("joint4_01")][0] = (-90.0) * M_PI/180.0;
+  
+  mbc.q[mb.jointIndexByName("joint1_12")][0] = (-80.0) * M_PI/180.0;
+  mbc.q[mb.jointIndexByName("joint2_12")][0] = (+80.0) * M_PI/180.0;
+  mbc.q[mb.jointIndexByName("joint3_12")][0] = (-80.0) * M_PI/180.0;
+  mbc.q[mb.jointIndexByName("joint4_12")][0] = (+80.0) * M_PI/180.0;
 
   //method = InverseMethodPtr(new LMInvConsideredSolvality(Wl, We));
   method = InverseMethodPtr(new LMInvConsideredSolvalityWithLimit(Wl, We, HiLimit, LoLimit));

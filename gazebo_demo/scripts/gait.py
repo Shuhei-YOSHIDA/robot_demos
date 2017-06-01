@@ -12,12 +12,12 @@ class GaitData():
         self.current_time = 0
         self.swing_height = height
         self.frame_id = 'base_link'
-        self.stride = 0.100
+        self.stride = 0.070
         # base_link, yz-plane, the order of leg
-        self.position_refs = [[+0.280, +0.155, +0.150 ], #limb1
-                              [+0.280, -0.155, +0.150 ], 
-                              [+0.280, +0.155, -0.150 ], 
-                              [+0.280, -0.155, -0.150 ] ]
+        self.position_refs = [[+0.220, +0.185, +0.180 ], #limb1
+                              [+0.220, -0.185, +0.180 ], 
+                              [+0.220, +0.185, -0.180 ], 
+                              [+0.220, -0.185, -0.180 ] ]
 
     # Call this at each sampling time
     def crawl_phases(self, dt):
