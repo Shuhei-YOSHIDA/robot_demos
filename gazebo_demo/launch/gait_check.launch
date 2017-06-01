@@ -10,6 +10,6 @@
   <node name="gait_ik" pkg="gazebo_demo" type="gait_ik" respawn="true" output="screen"/>
 
   <!-- rviz -->
-  <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find gazebo_demo)/launch/gazebo_simulation.rviz"/>
+  <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find gazebo_demo)/launch/gait_check.rviz"/>
 
 </launch>
