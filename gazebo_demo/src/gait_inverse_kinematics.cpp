@@ -3,6 +3,7 @@
 #include <RBDyn/MultiBodyConfig.h>
 #include <RBDynUrdf/Reader.h>
 #include <geometry_msgs/PoseArray.h>
+#include <std_msgs/Float64.h>
 #include <sensor_msgs/JointState.h>
 #include "task_define.h"
 
@@ -13,6 +14,7 @@ std::string ee_names[4] = {"link1_4", "link2_4", "link3_4", "link4_4"};
 //std::string ee_names[4] = {"l_wrist", "r_wrist", "r_ankle", "l_ankle"};
 ros::Subscriber sub;
 ros::Publisher pub;
+ros::Publisher command_pub[16];
 
 void JointStateFromMBC(rbd::MultiBody mb, rbd::MultiBodyConfig mbc, sensor_msgs::JointState& msg)
 {
@@ -51,6 +53,15 @@ void gaitCallback(const geometry_msgs::PoseArray::ConstPtr& msg, rbd::MultiBody 
   sensor_msgs::JointState js_msg;
   JointStateFromMBC(mb, mbc, js_msg);
   pub.publish(js_msg);
+
+  for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
+          std::string name = "joint" + std::to_string(i+1) + "_" + std::to_string(j) + std::to_string(j+1);
+          std_msgs::Float64 v;
+          v.data = mbc.q[mb.jointIndexByName(name)][0];
+          command_pub[i*4+ j].publish(v);
+      }
+  }
 }
 
 
@@ -130,6 +141,13 @@ int main(int argc, char **argv)
 
   pub = nh.advertise<sensor_msgs::JointState>("joint_states", 1);
   sub = nh.subscribe<geometry_msgs::PoseArray>("gait_pose", 1, boost::bind(gaitCallback, _1, mb, mbc));
+
+  for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 4; j++) {
+          std::string name = "joint" + std::to_string(i+1) + "_" + std::to_string(j) + std::to_string(j+1) + "_position_controller/command";
+          command_pub[i*4 + j] = nh.advertise<std_msgs::Float64>(name, 1);
+      }
+  }
 
   ROS_INFO("start ik");
   ros::spin();

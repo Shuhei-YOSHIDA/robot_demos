@@ -18,7 +18,7 @@
 
   <!-- Start the controller -->
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="/demo_robo"/>
 
   <rosparam file="$(find gazebo_demo)/config/velocity_control.yaml" command="load"/>
   <!-- Load the controllers -->
@@ -42,8 +42,10 @@
   />
 
   <!-- gait -->
-  <node name="gait_publisher" pkg="gazebo_demo" type="gait.py" respawn="true"/>
-  <node name="gait_ik" pkg="gazebo_demo" type="gait_ik" respawn="true" output="screen"/>
+  <node name="gait_publisher" pkg="gazebo_demo" type="gait.py" respawn="true" ns="/demo_robo"/>
+  <node name="gait_ik" pkg="gazebo_demo" type="gait_ik" respawn="true" output="screen" ns="/demo_robo">
+    <remap from="/joint_states" to="/joint_states_dummy"/>
+  </node>
 
   <!-- rviz -->
   <node name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(find gazebo_demo)/launch/gazebo_simulation.rviz"/>
